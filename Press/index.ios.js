@@ -12,40 +12,48 @@ import {
   View,
   TouchableHighlight,
   TouchableNativeFeedback,
-  Alert
+  Alert,
+  Button
 } from 'react-native';
 
-const seconds = 30;
+import { StackNavigator } from 'react-navigation';
 
-export default class Press extends Component {
+const seconds = 3;
+
+export default class MainScreen extends Component {
+
+  static navigationOptions = {
+    title: 'Hit the Button!',
+  };
 
   state = {
     hits : 0,
     seconds: seconds,
+    activeCount: false,
   };
 
   countdown = () => {
     console.log('countdownClick');
-    if (this.state.seconds === 0) {
+    if (this.state.seconds === 1) {
       clearTimeout(timerId);
-      this.state.seconds = 'N0';
+      this.state.seconds = 0;
       this.setState({ seconds: this.state.seconds});
       this.scoreAlert();
+      this.rankingNav();
     } else {
       this.state.seconds--;
       this.setState({ seconds: this.state.seconds});
     }
   }
 
-  activeCount = false;
 
   onButtonPress = () => {
     console.log('Pressed');
-    if (this.activeCount === false) {
+    if (this.state.activeCount === false) {
       timerId = setInterval(this.countdown, 1000);
-      this.activeCount = true;
+      this.setState({ activeCount: true})
     }
-    if (this.state.seconds !== 'N0') {
+    if (this.state.seconds !== 0) {
       this.setState({ hits: this.state.hits + 1 });
     }
   }
@@ -55,7 +63,17 @@ export default class Press extends Component {
     this.state.hits.toString() + ' hits at a speed of ' + (this.state.hits/seconds).toFixed(2).toString() + ' hps',
   )}
 
+  rankingNav = () => {
+    const { navigate } = this.props.navigation;
+    console.log('IN Rank Nav');
+    navigate('Chat');
+    // navigate('Chat');
+  }
+
   render() {
+    const { navigate } = this.props.navigation;
+
+
     return (
       <View style={styles.container}>
         <Text style={styles.up}>
@@ -68,14 +86,29 @@ export default class Press extends Component {
 
         <TouchableHighlight onPress={this.onButtonPress}>
           <View style={styles.button}>
-            <Text style={{margin: 30}}>Button</Text>
+            <Text style={styles.buttonText}>HIT ME!</Text>
           </View>
         </TouchableHighlight>
 
       </View>
+
     );
   }
 }
+
+class ChatScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Rankings',
+  };
+  render() {
+    return (
+      <View>
+        <Text>Lorem Ipsum</Text>
+      </View>
+    );
+  }
+}
+
 
 const styles = StyleSheet.create({
   container: {
@@ -86,15 +119,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   button: {
-    backgroundColor: '#60b7e2',
+    backgroundColor: 'red',
     margin: 5,
     height: 300,
     width: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+
   },
   up: {
     margin: 40,
   }
 
 });
+
+
+const Press = StackNavigator({
+  Home: { screen: MainScreen },
+  Chat: { screen: ChatScreen },
+});
+
 
 AppRegistry.registerComponent('Press', () => Press);
