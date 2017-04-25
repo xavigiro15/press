@@ -38,40 +38,6 @@ export default class MainScreen extends Component {
     hits : 0,
   };
 
-
-  onTimerEnd = () => {
-    this.nameType();
-    this.rankingNav();
-  }
-
-  endTimer = () => {
-    this.setState({ activeCount: false});
-    this.scoreAlert();
-  }
-
-
-  scoreAlert = () => {Alert.alert(
-    'Final Score',
-    this.state.hits.toString() + ' hits at a speed of ' + (this.state.hits/seconds).toFixed(2).toString() + ' hps',
-    [
-      {text: 'Okay', onPress: this.nameType},
-    ],
-  )}
-
-
-  rankingNav = () => {
-    const { navigate } = this.props.navigation;
-    console.log('IN Rank Nav');
-    navigate('Rankings', {
-      hits: this.state.hits,
-      newname: this.state.name,
-    });
-    //parar crono
-    if (this.state.activeCount === true) {
-      clearTimeout(timerId);
-    }
-  }
-
   onButtonPress = () => {
     console.log('Pressed');
     if (this.state.activeCount === false) {
@@ -82,6 +48,7 @@ export default class MainScreen extends Component {
       this.setState({ hits: this.state.hits + 1 });
     }
   }
+
 
   countdown = () => {
     console.log('countdownClick');
@@ -97,9 +64,19 @@ export default class MainScreen extends Component {
     }
   }
 
-  countsRestart = () => {
-    
+
+  endTimer = () => {
+    this.setState({ activeCount: false});
+    this.scoreAlert();
   }
+
+  scoreAlert = () => {Alert.alert(
+    'Final Score',
+    this.state.hits.toString() + ' hits at a speed of ' + (this.state.hits/seconds).toFixed(2).toString() + ' hps',
+    [
+      {text: 'Okay', onPress: this.nameType},
+    ],
+  )}
 
   nameType = () => AlertIOS.prompt(
     'Type your name',
@@ -113,6 +90,32 @@ export default class MainScreen extends Component {
     console.log(this.state.name);
     this.rankingNav();
   }
+
+  rankingNav = () => {
+    const { navigate } = this.props.navigation;
+    console.log('IN Rank Nav');
+    navigate('Rankings', {
+      hits: this.state.hits,
+      newname: this.state.name,
+      restart: this.restart,
+    });
+    //parar crono
+    if (this.state.activeCount === true) {
+      clearTimeout(timerId);
+    }
+    this.setState({ hits: 0,
+    seconds: seconds,
+    activeCount: false,
+    name: '',
+  });
+  }
+
+  restart = () => {
+    const { goBack } = this.props.navigation;
+    goBack();
+
+  }
+
 
   render() {
     return (

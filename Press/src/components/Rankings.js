@@ -30,7 +30,6 @@ export default class Rankings extends React.Component {
   restart = () => {
     const { goBack } = this.props.navigation;
     goBack();
-    this.setState({ hits: 0 });
   }
 
   render() {
