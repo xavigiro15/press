@@ -13,10 +13,15 @@ import {
   TouchableHighlight,
   TouchableNativeFeedback,
   Alert,
-  Button
+  Button,
+  AlertIOS,
 } from 'react-native';
 
 import { StackNavigator } from 'react-navigation';
+
+import Rankings from './src/components/Rankings';
+import HitsButton from './src/components/HitsButton';
+import Timer from './src/components/Timer';
 
 const seconds = 3;
 
@@ -27,84 +32,108 @@ export default class MainScreen extends Component {
   };
 
   state = {
-    hits : 0,
-    seconds: seconds,
     activeCount: false,
+    name: '',
+    seconds: seconds,
+    hits : 0,
   };
+
+
+  onTimerEnd = () => {
+    this.nameType();
+    this.rankingNav();
+  }
+
+  endTimer = () => {
+    this.setState({ activeCount: false});
+    this.scoreAlert();
+  }
+
+
+  scoreAlert = () => {Alert.alert(
+    'Final Score',
+    this.state.hits.toString() + ' hits at a speed of ' + (this.state.hits/seconds).toFixed(2).toString() + ' hps',
+    [
+      {text: 'Okay', onPress: this.nameType},
+    ],
+  )}
+
+
+  rankingNav = () => {
+    const { navigate } = this.props.navigation;
+    console.log('IN Rank Nav');
+    navigate('Rankings', {
+      hits: this.state.hits,
+      newname: this.state.name,
+    });
+    //parar crono
+    if (this.state.activeCount === true) {
+      clearTimeout(timerId);
+    }
+  }
+
+  onButtonPress = () => {
+    console.log('Pressed');
+    if (this.state.activeCount === false) {
+      this.setState({ activeCount: true})
+      timerId = setInterval(this.countdown, 1000);
+    }
+    if (this.state.activeCount === true) {
+      this.setState({ hits: this.state.hits + 1 });
+    }
+  }
 
   countdown = () => {
     console.log('countdownClick');
-    if (this.state.seconds === 1) {
+    if(this.state.seconds === 1){
       clearTimeout(timerId);
       this.state.seconds = 0;
       this.setState({ seconds: this.state.seconds});
+      console.log(this.state.seconds);
       this.scoreAlert();
-      this.rankingNav();
     } else {
       this.state.seconds--;
       this.setState({ seconds: this.state.seconds});
     }
   }
 
-
-  onButtonPress = () => {
-    console.log('Pressed');
-    if (this.state.activeCount === false) {
-      timerId = setInterval(this.countdown, 1000);
-      this.setState({ activeCount: true})
-    }
-    if (this.state.seconds !== 0) {
-      this.setState({ hits: this.state.hits + 1 });
-    }
+  countsRestart = () => {
+    
   }
 
-  scoreAlert = () => {Alert.alert(
-    'Final Score',
-    this.state.hits.toString() + ' hits at a speed of ' + (this.state.hits/seconds).toFixed(2).toString() + ' hps',
-  )}
+  nameType = () => AlertIOS.prompt(
+    'Type your name',
+    null,
+    this.saveResponse
+  );
 
-  rankingNav = () => {
-    const { navigate } = this.props.navigation;
-    console.log('IN Rank Nav');
-    navigate('Chat');
-    // navigate('Chat');
+  saveResponse = (value) => {
+    console.log(value);
+    this.setState({ name: value});
+    console.log(this.state.name);
+    this.rankingNav();
   }
 
   render() {
-    const { navigate } = this.props.navigation;
-
-
     return (
       <View style={styles.container}>
-        <Text style={styles.up}>
-          {this.state.seconds} SECONDS LEFT
-        </Text>
+        <Timer
+          start={this.state.activeCount}
+          seconds={this.state.seconds}
+        />
 
-        <Text>
-          {this.state.hits} HITS
-        </Text>
+        <HitsButton
+          onButtonPress={this.onButtonPress}
+          hits={this.state.hits}
+        />
 
-        <TouchableHighlight onPress={this.onButtonPress}>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>HIT ME!</Text>
-          </View>
-        </TouchableHighlight>
+        <Button
+          onPress={this.rankingNav}
+          title="Rankings"
+        />
 
       </View>
 
-    );
-  }
-}
-
-class ChatScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Rankings',
-  };
-  render() {
-    return (
-      <View>
-        <Text>Lorem Ipsum</Text>
-      </View>
     );
   }
 }
@@ -118,28 +147,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  button: {
-    backgroundColor: 'red',
-    margin: 5,
-    height: 300,
-    width: 300,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-
-  },
-  up: {
-    margin: 40,
-  }
 
 });
 
 
 const Press = StackNavigator({
   Home: { screen: MainScreen },
-  Chat: { screen: ChatScreen },
+  Rankings: {
+    path: 'src/components/Rankings',
+    screen: Rankings,
+  },
 });
-
 
 AppRegistry.registerComponent('Press', () => Press);
