@@ -29,16 +29,18 @@ const Score = require('./models/Score')
     // }
   // })
 
-app.get('/scores', function (req, res) {
-  mongoose.model('scores').find(function(err, scores) {
-    res.send(scores)
-  });
+router.get('/scores', async function (ctx, next) {
+  const scores = await Score.find().sort({ value: -1 })
+  ctx.body = scores;
+  ctx.status = 200;
 });
 
-app.post('/scores', function (req, res) {
-  mongoose.model('scores').find(function(err, scores) {
-    res.send(scores)
-  });
+router.post('/scores', async function (ctx, next) {
+  const score = new Score(ctx.request.body)
+  await score.save();
+  ctx.body = score;
+  ctx.status = 201;
+  next()
 });
 
 app

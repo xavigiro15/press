@@ -30,9 +30,9 @@ export default class Timer extends Component {
 
 const styles = StyleSheet.create({
   up: {
-    marginTop: 40,
-    marginBottom: 40,
-    marginLeft: 220,
+    marginTop: 20,
+    marginBottom: 20,
+    marginLeft: 180,
     fontWeight: 'bold',
     fontFamily: 'Futura',
     fontSize: 12,

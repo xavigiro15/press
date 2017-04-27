@@ -31,16 +31,4 @@ const scoreSchema = mongoose.Schema({
   value: Number,
 })
 
-const Score = mongoose.model('Score', scoreSchema);
-
-var kitty = new Score({
-  name: 'Zildjian',
-  value: '300'
-  });
-kitty.save(function (err) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log('yay');
-  }
-});
+module.exports = mongoose.model('Score', scoreSchema);

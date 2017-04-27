@@ -88,8 +88,25 @@ export default class MainScreen extends Component {
     console.log(value);
     this.setState({ name: value});
     console.log(this.state.name);
-    this.rankingNav();
+    this.daFetch();
   }
+
+
+  daFetch = () => {
+    fetch('http://localhost:3000/scores', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: this.state.name,
+        value: this.state.hits,
+      })
+    })
+    .then(() => this.rankingNav())
+  }
+
+
 
   rankingNav = () => {
     const { navigate } = this.props.navigation;
