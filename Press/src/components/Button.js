@@ -21,8 +21,8 @@ export default class BigButton extends Component {
   render() {
     return (
       <View>
-        <TouchableHighlight onPress={this.props.onButtonPress}>
-          <View style={styles.button}>
+        <TouchableHighlight style={styles.button} activeOpacity={0.3} onPress={this.props.onButtonPress}>
+          <View >
             <Text style={styles.buttonText}>HIT ME!</Text>
           </View>
         </TouchableHighlight>
@@ -34,12 +34,20 @@ export default class BigButton extends Component {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: 'red',
-    margin: 5,
+    backgroundColor: '#3bbef7',
+    marginBottom: 20,
     height: 300,
     width: 300,
+    borderRadius: 150,
     justifyContent: 'center',
     alignItems: 'center',
+
   },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontFamily: 'Futura',
+    fontSize: 12,
+  }
 
 });

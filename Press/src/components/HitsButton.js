@@ -36,8 +36,6 @@ export default class HitsButton extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
+    justifyContent: 'center'  }
 
 });

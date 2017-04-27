@@ -28,7 +28,7 @@ const seconds = 3;
 export default class MainScreen extends Component {
 
   static navigationOptions = {
-    title: 'Hit the Button!',
+    title: 'Press Party!',
   };
 
   state = {
@@ -110,11 +110,7 @@ export default class MainScreen extends Component {
   });
   }
 
-  restart = () => {
-    const { goBack } = this.props.navigation;
-    goBack();
 
-  }
 
 
   render() {
@@ -145,8 +141,6 @@ export default class MainScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 50,
-    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
